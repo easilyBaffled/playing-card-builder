@@ -1,22 +1,22 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./styles.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './styles.css';
 console.clear();
 
 // document.getElementById("id").addEventListener("click", () => window.print());
 
 var strToConsumingRegex = str =>
-  new RegExp(str.includes("(") ? str : `(${str})`);
+    new RegExp(str.includes('(') ? str : `(${str})`);
 
 var consumeKIDict = keywordIconDict => iconWrapper => str =>
-  Object.entries(keywordIconDict).reduce(
-    (acc, [keyword, icon]) =>
-      acc.replace(strToConsumingRegex(keyword), `$1${iconWrapper(icon)}`),
-    str
-  );
+    Object.entries(keywordIconDict).reduce(
+        (acc, [keyword, icon]) =>
+            acc.replace(strToConsumingRegex(keyword), `$1${iconWrapper(icon)}`),
+        str
+    );
 
-var addIcons = consumeKIDict({ "([aeiou])": "👍", b: "⚡️" })(
-  str => `(${str}) `
+var addIcons = consumeKIDict({ '([aeiou])': '👍', b: '⚡️' })(
+    str => `(${str}) `
 );
 
 const cards = `Swaps: move chips and Effects until the end of the current turn
@@ -60,52 +60,52 @@ When this chip is cleared freeze all chips in the same row
 When this chip is cleared freeze all chips in the same column`;
 
 var convertToCards = cardText =>
-  cardText
-    .trim()
-    .split("\n")
-    .filter(v => v);
+    cardText
+        .trim()
+        .split('\n')
+        .filter(v => v);
 // .map( addIcons )
 
 // convertToCards(str)
 
 // TODO: Isolate the React portion as much as possible so that it can easily be ported
 
-const Page = ({ style = {}, className = "", children }) => (
-  <div className={"page flexContainer" + className} style={style}>
-    {children}
-  </div>
+const Page = ({ style = {}, className = '', children }) => (
+    <div className={'page flexContainer' + className} style={style}>
+        {children}
+    </div>
 );
 
 const Card = ({ size, children, rightBorder, bottomBorder }) => (
-  <div
-    className={
-      "card " +
-      (rightBorder ? "rightBorder " : "") +
-      (bottomBorder ? "bottomBorder" : "")
-    }
-    style={{
-      height: size.height + "in",
-      width: size.width + "in"
-    }}
-  >
-    {children}
-  </div>
+    <div
+        className={
+            'card ' +
+            (rightBorder ? 'rightBorder ' : '') +
+            (bottomBorder ? 'bottomBorder' : '')
+        }
+        style={{
+            height: size.height + 'in',
+            width: size.width + 'in'
+        }}
+    >
+        <span className="card-text">{children}</span>
+    </div>
 );
 
 const cardSize = {
-  height: 2.5,
-  width: 1.6
+    height: 2.5,
+    width: 1.6
 };
 
 const pageSize = {
-  // Accounting for padding
-  height: 10.5,
-  width: 8
+    // Accounting for padding
+    height: 10.5,
+    width: 8
 };
 
 const cardsPerPage =
-  Math.floor(pageSize.height / cardSize.height) *
-  Math.floor(pageSize.width / cardSize.width);
+    Math.floor(pageSize.height / cardSize.height) *
+    Math.floor(pageSize.width / cardSize.width);
 const cardsInRow = Math.floor(pageSize.width / cardSize.width);
 const isLastInRow = index => !((index + 1) % cardsInRow);
 // const isInLastRow = index => cardsPerPage - index <= cardsInRow;
@@ -117,26 +117,26 @@ const data = convertToCards(cards);
 
 const numberOfPages = Math.ceil(data.length / cardsPerPage);
 const dataPerPage = Array.from({ length: numberOfPages }, (_, i) =>
-  data.slice(i * cardsPerPage, i * cardsPerPage + cardsPerPage)
+    data.slice(i * cardsPerPage, i * cardsPerPage + cardsPerPage)
 );
 
 const Pages = () => (
-  <div>
-    {dataPerPage.map((pageData, p) => (
-      <Page key={p}>
-        {pageData.map((data, i) => (
-          <Card
-            key={i}
-            size={cardSize}
-            rightBorder={isLastInRow(i)}
-            bottomBorder={pageData.length - i <= cardsInRow}
-          >
-            {data}
-          </Card>
+    <div>
+        {dataPerPage.map((pageData, p) => (
+            <Page key={p}>
+                {pageData.map((data, i) => (
+                    <Card
+                        key={i}
+                        size={cardSize}
+                        rightBorder={isLastInRow(i)}
+                        bottomBorder={pageData.length - i <= cardsInRow}
+                    >
+                        {data}
+                    </Card>
+                ))}
+            </Page>
         ))}
-      </Page>
-    ))}
-  </div>
+    </div>
 );
 
-ReactDOM.render(<Pages />, document.getElementById("root"));
+ReactDOM.render(<Pages />, document.getElementById('root'));
